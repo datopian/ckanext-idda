@@ -88,6 +88,9 @@ setup(
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan
+
+        [ckan.rdf.profiles]
+        dct_profile = ckanext.idda.profiles:DCTProfile
     ''',
 
     # If you are changing from the default layout of your extension, you may
