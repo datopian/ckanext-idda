@@ -1,0 +1,12 @@
+{% ckan_extends %}
+{% set showcase_route = 'showcase_blueprint.index' %}
+{% block header_site_navigation_tabs %}
+{{ h.build_nav_main(
+('dataset.search', _('Datasets')),
+('organization.index', _('Organizations')),
+('group.index', _('Groups')),
+('datarequest.index', _('Data Requests') + h.get_open_datarequests_badge()),
+('showcase_blueprint.index', _('Showcases')),
+('home.about', _('About'))
+) }}
+{% endblock %}
