@@ -91,6 +91,7 @@ setup(
 
         [ckan.rdf.profiles]
         dct_profile = ckanext.idda.profiles:DCTProfile
+        schemaorglin= ckanext.idda.profiles:SchemaOrgMultilingualProfile
     ''',
 
     # If you are changing from the default layout of your extension, you may

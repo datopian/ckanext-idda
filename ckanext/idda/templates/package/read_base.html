@@ -1,0 +1,11 @@
+{% ckan_extends %}
+
+
+{% block scripts %}
+    {{ super() }}
+    {% block structured_data %}
+        <script type="application/ld+json">
+        {{ h.structured_data(pkg.id, ['schemaorglin'])|safe }}
+        </script>
+    {% endblock %}
+{% endblock %}
