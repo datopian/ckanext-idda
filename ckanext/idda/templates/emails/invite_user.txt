@@ -1,19 +1,18 @@
 {% trans %}
-Hörmətli {{ user_name }},
+Hörmətli {{ user_name }},\n\n
 
-Sizi məlumatlandırmaq istərdik ki, artıq sizin üçün “Açıq məlumatlar” portalının məlumat idarəetmə sistemində elektron kabinetiniz yaradılmışdır.
+Sizi məlumatlandırmaq istərdik ki, artıq sizin üçün “Açıq məlumatlar” portalının məlumat idarəetmə sistemində elektron kabinetiniz yaradılmışdır.\n\n
 
-Siz {{ user_name }} ilə {{ group_title }} {{ role_name }} kimi əlavə olundunuz.
+Siz {{ user_name }} ilə {{ group_title }} {{ role_name }} kimi əlavə olundunuz.\n\n
 
-Hesabınızı aktivləşdirmək və şifrə təyin etmək üçün aşağıdakı linkə keçid edin:
+Hesabınızı aktivləşdirmək və şifrə təyin etmək üçün aşağıdakı linkə keçid edin:\n
 {{ reset_link }}
 
-Hesabınızı aktivləşdirdikdən sonra idarəetmə sisteminə daxil olmaq üçün bu linkdən istifadə edin: https://opendata-api.idda.az/
+Hesabınızı aktivləşdirdikdən sonra idarəetmə sisteminə daxil olmaq üçün bu linkdən istifadə edin:\n
+https://opendata-api.idda.az/ \n\n
 
-Əgər hər hansı sualınız olarsa, opendata@idda.az elektron poçt ünvanına müraciət edə bilərsiniz.
+Əgər hər hansı sualınız olarsa, opendata@idda.az elektron poçt ünvanına müraciət edə bilərsiniz.\n\n
 
-Hörmətlə,
-İnnovasiya və Rəqəmsal İnkişaf Agentliyi
+Hörmətlə,\n
+İnnovasiya və Rəqəmsal İnkişaf Agentliyi\n
 {% endtrans %}
-
-
