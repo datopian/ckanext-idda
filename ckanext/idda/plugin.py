@@ -16,7 +16,9 @@ class IddaPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'package_search': package_search,
-            'package_show': package_show
+            'package_show': package_show,
+            'package_create': package_create,
+            'package_update': package_update
         }
 
     # IConfigurer
@@ -47,6 +49,10 @@ def package_search(original_action, context, data_dict):
 
     for pkg in result['results']:
         try:
+            if not data_dict.get('notes', None):
+                note = data_dict.get('notes_translated', None)
+                if note:
+                    pkg["notes"] = note.get('az', "")
             pkg["total_downloads"] = toolkit.get_action('package_stats')(context, {'package_id': pkg['id']})
         except:
             pkg["total_downloads"] = 0
@@ -64,4 +70,17 @@ def package_show(original_action, context, data_dict):
     except:
         result["total_downloads"] = 0
 
+    return result
+
+
+@plugins.toolkit.chained_action
+def package_create(original_action, context, data_dict):
+    data_dict["notes"] = data_dict.get('notes_translated-az', '')
+    result = original_action(context, data_dict)
+    return result
+
+@plugins.toolkit.chained_action
+def package_update(original_action, context, data_dict):
+    data_dict["notes"] = data_dict.get('notes_translated-az', '')
+    result = original_action(context, data_dict)
     return result
