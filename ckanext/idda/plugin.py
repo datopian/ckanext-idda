@@ -3,7 +3,8 @@ import ckan.plugins.toolkit as toolkit
 from flask import Blueprint, render_template
 import logging
 
-
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 def hello_plugin():
     return u'Hello from the Datopian Theme extension'
 
@@ -12,6 +13,7 @@ class IddaPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IActions)
+
 
     def get_actions(self):
         return {
@@ -45,12 +47,12 @@ class IddaPlugin(plugins.SingletonPlugin):
 @plugins.toolkit.chained_action
 @toolkit.side_effect_free
 def package_search(original_action, context, data_dict):
-    result = original_action(context, data_dict)
 
-    for pkg in result['results']:
+    result = original_action(context, data_dict)
+    for pkg in result.get('results', None):
         try:
-            if not data_dict.get('notes', None):
-                note = data_dict.get('notes_translated', None)
+            if not pkg.get('notes', None):
+                note = pkg.get('notes_translated', None)
                 if note:
                     pkg["notes"] = note.get('az', "")
             pkg["total_downloads"] = toolkit.get_action('package_stats')(context, {'package_id': pkg['id']})
