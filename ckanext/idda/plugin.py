@@ -8,6 +8,8 @@ import ckan.authz as authz
 
 from ckanext.pages import db
 from ckanext.pages.actions import HTMLFirstImage
+import ckan.lib.dictization.model_dictize as model_dictize
+
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -32,6 +34,7 @@ class IddaPlugin(plugins.SingletonPlugin):
             'organization_update': organization_update,
             'group_update': group_update,
             "idda_pages_list": pages_list,
+            "idda_showcase_list": showcase_list,
         }
 
     # IConfigurer
@@ -230,3 +233,50 @@ def pages_list(context, data_dict):
         out_list.append(entry)
 
     return out_list
+
+
+@plugins.toolkit.side_effect_free
+def showcase_list(context, data_dict):
+    '''Return a list of all showcases in the site, grouping translations under `translated_showcase`.'''
+
+    # Check user permissions
+    toolkit.check_access('ckanext_showcase_list', context, data_dict)
+
+    model = context["model"]
+
+    # Query all active showcases
+    q = model.Session.query(model.Package) \
+        .filter(model.Package.type == 'showcase') \
+        .filter(model.Package.state == 'active')
+
+    # Convert to dictionaries
+    packages = [model_dictize.package_dictize(pkg, context) for pkg in q.all()]
+
+    # Separate base showcases and translations
+    base_map = {}
+    translations = []
+    for pkg in packages:
+        name = pkg.get('name', '')
+        # Identify translations by a single dash separating locale and base name
+        if '-' in name:
+            locale, base_name = name.split('-', 1)
+            # simple locale code check (e.g., 'en', 'ru')
+            if locale.isalpha() and len(locale) == 2:
+                translations.append((locale, base_name, pkg))
+                continue
+        # Otherwise treat as base showcase
+        pkg['translated_showcase'] = {}
+        base_map[name] = pkg
+
+    # Attach translations to their base entries
+    for locale, base_name, trans_pkg in translations:
+        base_entry = base_map.get(base_name)
+        if base_entry:
+            base_entry['translated_showcase'][locale] = trans_pkg
+        else:
+            # If no base found, you can decide to include or log
+            # For now, skip unmatched translations
+            continue
+
+    # Return only base showcases with their translations
+    return list(base_map.values())
