@@ -91,13 +91,15 @@ def package_show(original_action, context, data_dict):
 
 @plugins.toolkit.chained_action
 def package_create(original_action, context, data_dict):
-    data_dict["notes"] = data_dict.get('notes_translated-az', '')
+    if not  data_dict["notes"]:
+        data_dict["notes"] = data_dict.get('notes_translated-az', '')
     result = original_action(context, data_dict)
     return result
 
 @plugins.toolkit.chained_action
 def package_update(original_action, context, data_dict):
-    data_dict["notes"] = data_dict.get('notes_translated-az', '')
+    if not  data_dict["notes"]:
+        data_dict["notes"] = data_dict.get('notes_translated-az', '')
     result = original_action(context, data_dict)
     return result
 
