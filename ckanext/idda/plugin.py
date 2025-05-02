@@ -33,6 +33,8 @@ class IddaPlugin(plugins.SingletonPlugin):
             'group_create': group_create,
             'organization_update': organization_update,
             'group_update': group_update,
+            'organization_show': organization_show,
+            'group_show': group_show,
             "idda_pages_list": pages_list,
             "idda_showcase_list": showcase_list,
         }
@@ -118,11 +120,52 @@ def organization_create(up_func,context,data_dict):
 def group_create(up_func,context,data_dict): 
     data_dict['title'] = data_dict.get('title_translated-az', '') 
 
-    if data_dict['description_translated-az']:                                                                                                                         
+    if data_dict.get('description_translated-az', None):                                                                                                                         
         data_dict['description'] = data_dict.get('description_translated-az', '')  
     
                                                                
     result = up_func(context, data_dict)                                                                                                                                                                                                                                                                                                     
+    return result
+
+# add group_show and organization_show: mission is to check if translated-az is not empty if empty then fill it with the default title
+@plugins.toolkit.chained_action
+def group_show(up_func,context,data_dict):
+    result = up_func(context, data_dict)
+    title_translated = result.get('title_translated', None)
+    description_translated = result.get('description_translated', None)
+    if not title_translated:
+        result['title_translated'] = {
+            "az": result['title'],
+            "en": '',
+            "ru": ''
+        }
+
+    if not description_translated:
+        result['description_translated'] = {
+            "az": result['description'],
+            "en": '',
+            "ru": ''
+        }
+    return result
+
+
+@plugins.toolkit.chained_action
+def organization_show(up_func,context,data_dict):
+    result = up_func(context, data_dict)
+    title_translated = result.get('title_translated', None)
+    description_translated = result.get("notes_translated", None)
+    if not title_translated:
+        result['title_translated'] = {
+            "az": result['title'],
+            "en": '',
+            "ru": ''
+        }
+    if not description_translated:
+        result['notes_translated'] = {
+            "az": result['description'],
+            "en": '',
+            "ru": ''
+        }
     return result
 
 
@@ -140,7 +183,7 @@ def organization_update(up_func,context,data_dict):
 def group_update(up_func,context,data_dict): 
     data_dict['title'] = data_dict.get('title_translated-az', '') 
 
-    if data_dict['description_translated-az']:                                                                                                                         
+    if data_dict.get('description_translated-az', None):                                                                                                                         
         data_dict['description'] = data_dict.get('description_translated-az', '')  
     
                                                                
